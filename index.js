@@ -1,9 +1,15 @@
 const {MongoClient} = require('mongodb');
  
 async function main(){
-//replace <connection-string> with your MongoDB URI
     const uri = "mongodb://localhost:27017"
     const client = new MongoClient(uri);
+
+    try{
+      await client.connect();
+      console.log("Connected to MongoDB!");
+  
+      const db = client.db("testDB");
+      const collection = db.collection("drivers");
 
 
     const drivers = [
@@ -14,26 +20,39 @@ async function main(){
 
     //show the data in the console
     console.log(drivers);
+
+    //TODO: show the data in the console 
+    console.log("Driver Name:");
+    drivers.forEach(driver => console.log(driver.name));
+
+    //TODO: add additional driver to the drivers array 
+    drivers.push({
+      name: "Bob Johnson",vehicleType: "truck", isAvailable: true,rating: 4.9
+    });
     
-try{
-    await client.connect();
-    console.log("Connected to MongoDB!");
+    console.log("Driver Names:");
+    drivers.forEach(driver => console.log(driver.name));
+    
+    console.log("Added new driver:", drivers[drivers.length - 1]);
+    
+    //insert driver 
+    await collection.insertMany(drivers);
+    console.log("Drivers inserted successfully!")
 
-    const db = client.db("testDB");
-    const collection = db.collection("users");
+    // insert document 
+    await collection.insertOne({name: "tasha",age:22});
+    console.log("Document insert!");
 
- // insert document 
-await collection.insertOne({name: "tasha",age:22});
-console.log("Document insert!");
+    //Query the document 
+    const result = await collection.findOne({ name:"natasha"});
+    console.log("Query result:", result);
 
-// query the document 
-const result = await collection.findOne({name:"Alice"});
-console.log("Query result:", result);
-} catch (err) {
- console.log("Error:",err);
+    
+}catch(err){
+  console.error("Error:", err);
 } finally {
   await client.close();
 }
 }
 
-main();
+main(); 
