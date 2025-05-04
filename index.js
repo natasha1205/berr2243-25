@@ -44,6 +44,13 @@ async function main(){
     }).toArray();
     console.log("High Rated Available Drivers:", highRatedDrivers);
     
+    //update 
+    await collection.updateOne(
+      { name: "john Doe" }, 
+      { $inc: { rating: 0.1 } }
+    );
+    console.log("Updated John Doe's rating by 0.1");    
+
     // insert document 
     await collection.insertOne({name: "tasha",age:22});
     console.log("Document insert!");
@@ -51,6 +58,10 @@ async function main(){
     //Query the document 
     const result = await collection.findOne({ name:"natasha"});
     console.log("Query result:", result);
+
+ // delete 
+await collection.deleteMany({ isAvailable: false });
+console.log("Deleted unavailable drivers");
 
     
 }catch(err){
