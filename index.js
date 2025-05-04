@@ -32,13 +32,18 @@ async function main(){
     
     console.log("Driver Names:");
     drivers.forEach(driver => console.log(driver.name));
-    
     console.log("Added new driver:", drivers[drivers.length - 1]);
-    
+
     //insert driver 
     await collection.insertMany(drivers);
     console.log("Drivers inserted successfully!")
 
+    //Query high-rated drivers
+    const highRatedDrivers = await collection.find({ 
+      rating: { $gte: 4.5 }, isAvailable: true
+    }).toArray();
+    console.log("High Rated Available Drivers:", highRatedDrivers);
+    
     // insert document 
     await collection.insertOne({name: "tasha",age:22});
     console.log("Document insert!");
